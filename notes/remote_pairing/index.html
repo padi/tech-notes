@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Remote Pair Programming | Marc&#39;s Tech Notes</title><meta name="description" content="Last Thursday night, I had my first attempt at remote pair programming with Ramon (@rtayag), a colleague of mine. I didn't have a particular project to work…"><link rel="canonical" href="https://padi.github.io/tech-notes/notes/remote_pairing/"><link rel="icon" href="/tech-notes/favicon.svg" type="image/svg+xml"><link rel="icon" href="/tech-notes/favicon-32.png" type="image/png" sizes="32x32"><link rel="apple-touch-icon" href="/tech-notes/apple-touch-icon.png"><link rel="alternate" type="application/rss+xml" title="Marc's Tech Notes" href="/tech-notes/feed.xml"><link rel="sitemap" href="/tech-notes/sitemap-index.xml"><meta name="theme-color" content="#E8D5B7" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#2A1A12" media="(prefers-color-scheme: dark)"><meta property="og:site_name" content="Marc's Tech Notes"><meta property="og:title" content="Remote Pair Programming"><meta property="og:description" content="Last Thursday night, I had my first attempt at remote pair programming with Ramon (@rtayag), a colleague of mine. I didn't have a particular project to work…"><meta property="og:url" content="https://padi.github.io/tech-notes/notes/remote_pairing/"><meta property="og:type" content="article"><link rel="stylesheet" href="/tech-notes/_astro/Base.BLOt8DSr.css"></head><body class="site"><a class="skip" href="#main">Skip to the content</a><header class="wrap topbar"><a class="brand" href="/tech-notes/">Marc&#39;s Tech Notes</a><nav class="nav" aria-label="Main"><a href="/tech-notes/notes/">Notes</a><a href="/tech-notes/work/">Work</a><a href="/tech-notes/about/">About</a><a href="/tech-notes/now/">Now</a><a href="/tech-notes/elsewhere/">Elsewhere</a></nav></header><main id="main"><article data-pagefind-body data-topic="Working life" data-year="2013" data-shape="s-life" data-pagefind-meta="topic[data-topic], year[data-year], shape[data-shape]"><header class="wrap note-head"><span class="shape s-life" aria-hidden="true"></span><div class="note-title"><a class="topic-link" href="/tech-notes/topics/working-life/" data-pagefind-ignore>Working life</a><h1 class="display d2" style="margin-top: 8px; max-width: 18em" data-pagefind-meta="title">Remote Pair Programming</h1><p class="note-age" data-pagefind-ignore>Written in July 2013.</p><details class="egg" data-pagefind-ignore><summary><span class="egg-name">View the CSS for this sun</span></summary><p class="egg-note">You spotted it. This sun is half a rounded box, sitting on a bar:</p><pre class="code"><code>.life::before {
+  height: 42%;
+  background: var(--marigold);
+  border-radius: 999px 999px 0 0;
+}
+.life::after {
+  top: 64%;
+  height: 16%;
+  background: var(--roast);
+}</code></pre></details></div></header><div class="wrap note-body"><div class="prose"><p>Last Thursday night, I had my first attempt at remote pair programming with Ramon
+(<a href="http://twitter.com/rtayag">@rtayag</a>), a colleague of mine. I didn’t have a particular
+project to work on that night but I was ready to hack on anything for fun.</p>
+<p>The project we decided to work on was personal project called <a href="https://github.com/ramontayag/liquid_stream">liquid_stream</a>,
+something that he uses for his web app <a href="https://web.archive.org/web/20190504021746/http://get.stiltify.com:80/pages/home">stiltify.com</a>.</p>
+<p>We didn’t do much pairing at all since the gem wasn’t published until during the pairing session.
+Good thing I had some superficial knowledge of how Shopify’s <a href="https://github.com/Shopify/liquid">liquid template engine</a>,
+so I didn’t have to start from scratch. We spent most of the
+session just explaining a bit of his feature requirements, how
+<a href="https://github.com/shopify/liquid/issues/29">Shopify’s gem doesn’t support it out of the box</a>,
+and how liquid_stream solves this.</p>
+<p>Here’s a glimpse of our remote pairing session:</p>
+<figure>
+	<a href="http://new.tinygrab.com/e0661f148dba0fa599005d7afe6ef8440129a72624.png">
+    <img src="http://new.tinygrab.com/e0661f148dba0fa599005d7afe6ef8440129a72624.png">
+  </a>
+	<figcaption>
+    <a href="http://new.tinygrab.com/e0661f148dba0fa599005d7afe6ef8440129a72624.png" title="I pairing with Ramon (@rtayag)">
+      Me pairing with Ramon (@rtayag)
+    </a>.
+  </figcaption>
+</figure>
+<h4 id="the-good-stuff">The good stuff:</h4>
+<ul>
+<li><strong>Google+ hangouts are awesome.</strong> With a lot teleconferencing tools we used at work (usually depends on client),
+Google+ stood out since it just felt faster than Skype and it’s a lot easier to setup. If we will organize an
+online event, it is likely that we will use Google+.</li>
+<li><strong><a href="https://web.archive.org/web/20250619161358/https://tmate.io/">tmate.io</a> is perhaps the easiest way to connect to someone’s terminal.</strong> TL;DR: It’s like
+<a href="https://github.com/tmux/tmux">tmux</a> but safer than handing out your computer’s IP address. :)</li>
+<li>It was pretty encouraging to work with Ramon outside of the office. He’s one of the few local software developers
+that can express technical detail (or anything really) with clarity, and that continues outside of work.</li>
+</ul>
+<h4 id="the-things-we-couldve-done-better">The things we could’ve done better:</h4>
+<ul>
+<li>
+<p><strong>Pick on a project in advance</strong> we spent some time figuring out what to work on because we didn’t announce the projects/topics to work on in advance.</p>
+</li>
+<li>
+<p><strong>Make sure your computer/laptop is ready for use when the actual pair session begins</strong> -
+as if <a href="http://en.wikipedia.org/wiki/Murphy&#x27;s_law">Murphy’s Law</a> was poking fun at me, my
+internal speakers and mic died that same night. I didn’t have the luxury to troubleshoot, so I
+downloaded the Google+ Hangouts app on my iPad. Although it helped that my laptop was running less resources,
+I could’ve started checking if my setup was ready to go a few minutes earlier.</p>
+</li>
+</ul>
+<p>Oh! I almost forgot to mention:
+although we weren’t able to push new code during that night, I was able to merge a
+<a href="https://github.com/ramontayag/liquid_stream/pull/1">pull request</a> that
+completes the basic feature set of the app. Awesome.</p>
+<hr>
+<h4 id="notes-for-non-technical-readers">Notes (for non-technical readers):</h4>
+<ul>
+<li>Pair Programming is the software development technique in which two programmers work with one computer screen.</li>
+<li>Remote pair programming, simply put, is pair programming with chat.</li>
+<li>PHRUG - <a href="https://web.archive.org/web/20191209150602/https://www.pinoyrb.org/">Philippine Ruby Users Group</a></li>
+</ul>
+</div></div></article><section class="wrap seealso" aria-labelledby="more-title"><h2 class="display d3" id="more-title">More on Working life</h2><ul class="notes" data-note-list><li><a class="row" href="/tech-notes/notes/how_to_say_no/"><span class="shape s-life" aria-hidden="true"></span><span class="row-title">How to Say &quot;No&quot; When It Matters</span><span class="row-meta">2016</span></a></li><li><a class="row" href="/tech-notes/notes/first-post/"><span class="shape s-life" aria-hidden="true"></span><span class="row-title">First Post!</span><span class="row-meta">2013</span></a></li></ul></section></main><footer class="foot"><div class="wrap"><div class="foot-grid"><div class="foot-main"><p class="display d3 foot-pitch">I&#39;m open for Ruby, Rails and Shopify projects.</p><p class="foot-talk"><a href="/tech-notes/about/#talk">Let's talk</a></p></div><nav aria-label="Footer pages"><p class="foot-head">Pages</p><ul class="foot-list"><li><a href="/tech-notes/notes/">Notes</a></li><li><a href="/tech-notes/work/">Work</a></li><li><a href="/tech-notes/about/">About</a></li><li><a href="/tech-notes/now/">Now</a></li><li><a href="/tech-notes/elsewhere/">Elsewhere</a></li></ul></nav><nav aria-label="Profiles and feed"><p class="foot-head">Find me</p><ul class="foot-list"><li><a href="https://github.com/padi">GitHub</a></li><li><a href="https://x.com/marcrendl">X</a></li><li><a href="https://cssbattle.dev/player/mri">CSSBattle</a></li><li><a href="https://monkeytype.com/profile/m14o">Monkeytype</a></li><li><a href="/tech-notes/feed.xml">RSS feed</a></li></ul></nav></div><p class="foot-sign">Marc Rendl, 2026</p></div></footer></body></html>

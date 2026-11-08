@@ -1,0 +1,60 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Faster Rails Boot Times (and Tests) | Marc&#39;s Tech Notes</title><meta name="description" content="I've been in a number of rails projects, but the one I'm currently handling right now has about 200+ models --- the biggest rails project I've seen so far."><link rel="canonical" href="https://padi.github.io/tech-notes/notes/faster_rails_boot_times_and_tests/"><link rel="icon" href="/tech-notes/favicon.svg" type="image/svg+xml"><link rel="icon" href="/tech-notes/favicon-32.png" type="image/png" sizes="32x32"><link rel="apple-touch-icon" href="/tech-notes/apple-touch-icon.png"><link rel="alternate" type="application/rss+xml" title="Marc's Tech Notes" href="/tech-notes/feed.xml"><link rel="sitemap" href="/tech-notes/sitemap-index.xml"><meta name="theme-color" content="#E8D5B7" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#2A1A12" media="(prefers-color-scheme: dark)"><meta property="og:site_name" content="Marc's Tech Notes"><meta property="og:title" content="Faster Rails Boot Times (and Tests)"><meta property="og:description" content="I've been in a number of rails projects, but the one I'm currently handling right now has about 200+ models --- the biggest rails project I've seen so far."><meta property="og:url" content="https://padi.github.io/tech-notes/notes/faster_rails_boot_times_and_tests/"><meta property="og:type" content="article"><link rel="stylesheet" href="/tech-notes/_astro/Base.BLOt8DSr.css"></head><body class="site"><a class="skip" href="#main">Skip to the content</a><header class="wrap topbar"><a class="brand" href="/tech-notes/">Marc&#39;s Tech Notes</a><nav class="nav" aria-label="Main"><a href="/tech-notes/notes/">Notes</a><a href="/tech-notes/work/">Work</a><a href="/tech-notes/about/">About</a><a href="/tech-notes/now/">Now</a><a href="/tech-notes/elsewhere/">Elsewhere</a></nav></header><main id="main"><article data-pagefind-body data-topic="Ruby and Rails" data-year="2014" data-shape="s-ruby" data-pagefind-meta="topic[data-topic], year[data-year], shape[data-shape]"><header class="wrap note-head"><span class="shape s-ruby" aria-hidden="true"></span><div class="note-title"><a class="topic-link" href="/tech-notes/topics/ruby-and-rails/" data-pagefind-ignore>Ruby and Rails</a><h1 class="display d2" style="margin-top: 8px; max-width: 18em" data-pagefind-meta="title">Faster Rails Boot Times (and Tests)</h1><p class="note-age" data-pagefind-ignore>Written in July 2014.</p><details class="egg" data-pagefind-ignore><summary><span class="egg-name">View the CSS for this gem</span></summary><p class="egg-note">You spotted it. This gem is two layers, each with its own clip-path:</p><pre class="code"><code>.ruby {
+  background: var(--signal);
+  clip-path: polygon(24% 6%, 76% 6%, 100% 38%, 50% 96%, 0 38%);
+}
+.ruby::before {
+  background: var(--ink-red);
+  clip-path: polygon(0 38%, 100% 38%, 50% 96%);
+}</code></pre></details></div></header><div class="wrap note-body"><div class="prose"><p>I’ve been in a number of rails projects, but the one I’m
+currently handling right now has about 200+ models — the biggest
+rails project I’ve seen so far.</p>
+<p>I’ve been thinking of ways to make our rails app boot faster
+our daily work more productive. If you’re debugging and/or
+running unit tests iteratively, it can be a huge pain in the ass
+to load the whole development environment every single time!
+In fact, I’d go as far as saying slower tests will demotivate
+programmers and it will encourage less test runs.</p>
+<p>Yes, you can <a href="http://www.fngtps.com/2013/fast-test-suite-boot-times-with-ruby-on-rails/">tinker your code</a>
+or your test setup (e.g. see which dependencies in your Gemfile you can require at a later time)
+but that should be your last step. Consider first the tasks that will
+<a href="http://en.wikipedia.org/wiki/Pareto_principle">yield the most results with least amount of effort</a>.</p>
+<p>Here are the top 2 tips that will decrease your waiting time by more than 50% but will only take up to 15 minutes:</p>
+<h2 id="install-a-rails-preloader-gem-eg-zeus">Install a rails preloader gem e.g. Zeus</h2>
+<p>While this tip doesn’t really optimize your rails boot time per se,
+it saves you from waiting to load your test/development environment
+by loading it before you need it. This is why <a href="https://github.com/burke/zeus">Zeus</a> can claim:</p>
+<blockquote>
+<p>Zeus preloads your Rails app so that your normal development tasks such as console, server, generate, and specs/tests take less than one second.</p>
+</blockquote>
+<p>You can quickly try this out with the following:</p>
+<pre class="astro-code roast" style="background-color:#2A1A12;color:#F2E5CF; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#F2A900">&gt;</span><span style="color:#F2E5CF"> gem install zeus</span></span>
+<span class="line"><span style="color:#F2A900">&gt;</span><span style="color:#F2E5CF"> zeus start</span></span>
+<span class="line"><span style="color:#CDB491"># in another terminal</span></span>
+<span class="line"><span style="color:#F2A900">&gt;</span><span style="color:#F2E5CF"> zeus server </span><span style="color:#CDB491"># run rails server</span></span></code></pre>
+<p>Aside from Zeus, you can also try out <a href="https://github.com/jonleighton/spring">Spring</a></p>
+<h2 id="install-railsexpress-ruby-patch">Install railsexpress ruby patch</h2>
+<ul>
+<li>get the latest rvm</li>
+</ul>
+<pre class="astro-code roast" style="background-color:#2A1A12;color:#F2E5CF; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#F2A900">&gt;</span><span style="color:#F2E5CF"> rvm get head </span><span style="color:#CDB491"># or</span></span>
+<span class="line"><span style="color:#F2A900">&gt;</span><span style="color:#F2E5CF"> rvm get stable</span></span></code></pre>
+<ul>
+<li>install railsexpress patch to your current ruby</li>
+</ul>
+<pre class="astro-code roast" style="background-color:#2A1A12;color:#F2E5CF; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#F2A900">&gt;</span><span style="color:#F2E5CF"> rvm reinstall 1.9.3-p484 --patch railsexpress </span><span style="color:#CDB491"># to overwrite or...</span></span>
+<span class="line"><span style="color:#F2A900">&gt;</span><span style="color:#F2E5CF"> rvm install 1.9.3-p484-railsexpress --patch railsexpress </span><span style="color:#CDB491"># if you want to benchmark against the non-patched version</span></span></code></pre>
+<ul>
+<li>Benchmark to see how far you’ve improved the boot time by just applying this patch. Here’s the result on my machine:</li>
+</ul>
+<p>Before <code>railsexpress</code> patch:</p>
+<pre class="astro-code roast" style="background-color:#2A1A12;color:#F2E5CF; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#F2A900">&gt;</span><span style="color:#F2E5CF"> rvm use 1.9.3-p392; </span><span style="color:#AEBEFF">bundle</span><span style="color:#E8D5B7"> install</span><span style="color:#F2E5CF">;</span></span>
+<span class="line"><span style="color:#F2A900">&gt;</span><span style="color:#F2A900"> time</span><span style="color:#AEBEFF"> bundle</span><span style="color:#E8D5B7"> exec</span><span style="color:#E8D5B7"> rails</span><span style="color:#E8D5B7"> runner</span><span style="color:#E8D5B7"> "puts :OK"</span></span>
+<span class="line"><span style="color:#AEBEFF">bundle</span><span style="color:#E8D5B7"> exec</span><span style="color:#E8D5B7"> rails</span><span style="color:#E8D5B7"> runner</span><span style="color:#E8D5B7"> "puts :OK"</span><span style="color:#E8D5B7">  57.32s</span><span style="color:#E8D5B7"> user</span><span style="color:#E8D5B7"> 4.18s</span><span style="color:#E8D5B7"> system</span><span style="color:#E8D5B7"> 78%</span><span style="color:#E8D5B7"> cpu</span><span style="color:#E8D5B7"> 1:18.82</span><span style="color:#E8D5B7"> total</span></span></code></pre>
+<p>After <code>railsexpress</code> patch:</p>
+<pre class="astro-code roast" style="background-color:#2A1A12;color:#F2E5CF; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#F2A900">&gt;</span><span style="color:#F2E5CF"> rvm use 1.9.3-p392-railsexpress; </span><span style="color:#AEBEFF">bundle</span><span style="color:#E8D5B7"> install</span><span style="color:#F2E5CF">;</span></span>
+<span class="line"><span style="color:#F2A900">&gt;</span><span style="color:#F2A900"> time</span><span style="color:#AEBEFF"> bundle</span><span style="color:#E8D5B7"> exec</span><span style="color:#E8D5B7"> rails</span><span style="color:#E8D5B7"> runner</span><span style="color:#E8D5B7"> "puts :OK"</span></span>
+<span class="line"><span style="color:#AEBEFF">bundle</span><span style="color:#E8D5B7"> exec</span><span style="color:#E8D5B7"> rails</span><span style="color:#E8D5B7"> runner</span><span style="color:#E8D5B7"> "puts :OK"</span><span style="color:#E8D5B7">  15.63s</span><span style="color:#E8D5B7"> user</span><span style="color:#E8D5B7"> 5.20s</span><span style="color:#E8D5B7"> system</span><span style="color:#E8D5B7"> 84%</span><span style="color:#E8D5B7"> cpu</span><span style="color:#FFB4A0"> 24.650</span><span style="color:#E8D5B7"> total</span></span></code></pre>
+<p>More than 50% of the original boot time is shaved off by just applying the patch! I know 1 minute is pretty slow,
+but to bring it down into less than 30 seconds with a simple task is a big win!</p>
+<p>For more information, check out the <a href="https://github.com/skaes/rvm-patchsets">rvm patchsets repository</a>.</p>
+</div></div></article><section class="wrap seealso" aria-labelledby="more-title"><h2 class="display d3" id="more-title">More on Ruby and Rails</h2><ul class="notes" data-note-list><li><a class="row" href="/tech-notes/notes/kill-spring/"><span class="shape s-ruby" aria-hidden="true"></span><span class="row-title">Kill All Spring Processes</span><span class="row-meta">2017, revisited 2026</span></a></li><li><a class="row" href="/tech-notes/notes/throttle-down-rails-processes/"><span class="shape s-ruby" aria-hidden="true"></span><span class="row-title">Throttle Down Rails Processes</span><span class="row-meta">2017</span></a></li><li><a class="row" href="/tech-notes/notes/a_sane_way_to_adopt_code_conventions/"><span class="shape s-ruby" aria-hidden="true"></span><span class="row-title">A Sane way of Slowly Adopting Code Conventions</span><span class="row-meta">2016</span></a></li></ul></section></main><footer class="foot"><div class="wrap"><div class="foot-grid"><div class="foot-main"><p class="display d3 foot-pitch">I&#39;m open for Ruby, Rails and Shopify projects.</p><p class="foot-talk"><a href="/tech-notes/about/#talk">Let's talk</a></p></div><nav aria-label="Footer pages"><p class="foot-head">Pages</p><ul class="foot-list"><li><a href="/tech-notes/notes/">Notes</a></li><li><a href="/tech-notes/work/">Work</a></li><li><a href="/tech-notes/about/">About</a></li><li><a href="/tech-notes/now/">Now</a></li><li><a href="/tech-notes/elsewhere/">Elsewhere</a></li></ul></nav><nav aria-label="Profiles and feed"><p class="foot-head">Find me</p><ul class="foot-list"><li><a href="https://github.com/padi">GitHub</a></li><li><a href="https://x.com/marcrendl">X</a></li><li><a href="https://cssbattle.dev/player/mri">CSSBattle</a></li><li><a href="https://monkeytype.com/profile/m14o">Monkeytype</a></li><li><a href="/tech-notes/feed.xml">RSS feed</a></li></ul></nav></div><p class="foot-sign">Marc Rendl, 2026</p></div></footer></body></html>

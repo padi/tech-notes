@@ -1,0 +1,52 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Profiling Vim | Marc&#39;s Tech Notes</title><meta name="description" content="I've been using a pretty popular dotfile repo, YADR, for quite some time now. I've used it for so long that I've even made contributions to the project here…"><link rel="canonical" href="https://padi.github.io/tech-notes/notes/profiling_vim/"><link rel="icon" href="/tech-notes/favicon.svg" type="image/svg+xml"><link rel="icon" href="/tech-notes/favicon-32.png" type="image/png" sizes="32x32"><link rel="apple-touch-icon" href="/tech-notes/apple-touch-icon.png"><link rel="alternate" type="application/rss+xml" title="Marc's Tech Notes" href="/tech-notes/feed.xml"><link rel="sitemap" href="/tech-notes/sitemap-index.xml"><meta name="theme-color" content="#E8D5B7" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#2A1A12" media="(prefers-color-scheme: dark)"><meta property="og:site_name" content="Marc's Tech Notes"><meta property="og:title" content="Profiling Vim"><meta property="og:description" content="I've been using a pretty popular dotfile repo, YADR, for quite some time now. I've used it for so long that I've even made contributions to the project here…"><meta property="og:url" content="https://padi.github.io/tech-notes/notes/profiling_vim/"><meta property="og:type" content="article"><link rel="stylesheet" href="/tech-notes/_astro/Base.BLOt8DSr.css"></head><body class="site"><a class="skip" href="#main">Skip to the content</a><header class="wrap topbar"><a class="brand" href="/tech-notes/">Marc&#39;s Tech Notes</a><nav class="nav" aria-label="Main"><a href="/tech-notes/notes/">Notes</a><a href="/tech-notes/work/">Work</a><a href="/tech-notes/about/">About</a><a href="/tech-notes/now/">Now</a><a href="/tech-notes/elsewhere/">Elsewhere</a></nav></header><main id="main"><article data-pagefind-body data-topic="Vim" data-year="2017" data-shape="s-vim" data-pagefind-meta="topic[data-topic], year[data-year], shape[data-shape]"><header class="wrap note-head"><span class="shape s-vim" aria-hidden="true"></span><div class="note-title"><a class="topic-link" href="/tech-notes/topics/vim/" data-pagefind-ignore>Vim</a><h1 class="display d2" style="margin-top: 8px; max-width: 18em" data-pagefind-meta="title">Profiling Vim</h1><p class="note-age" data-pagefind-ignore>Written in February 2017.</p><details class="egg" data-pagefind-ignore><summary><span class="egg-name">View the CSS for these split windows</span></summary><p class="egg-note">You spotted it. These split windows are one bordered box and a divider:</p><pre class="code"><code>.vim {
+  background: var(--marigold);
+  border: calc(var(--sw) * 0.09) solid var(--roast);
+  border-radius: 12%;
+}
+.vim::before {
+  left: 44%;
+  width: 12%;
+  background: var(--roast);
+}</code></pre></details></div></header><div class="wrap note-body"><div class="prose"><p>I’ve been using a pretty popular dotfile repo, <a href="https://github.com/skwp/dotfiles">YADR</a>,
+for quite some time now. I’ve used it for so long that I’ve even made contributions
+to the project <a href="https://github.com/skwp/dotfiles/pull/506/files">here</a> and
+<a href="https://github.com/skwp/dotfiles/pull/711">there</a>.</p>
+<p>But sometimes, it slows down when performing certain tasks for no apparent reason.
+In particular, while making Ruby code examples for a presentation
+a few days ago, I noticed that opening/saving a ruby file took
+3-5 seconds! Wanting my itch to be scratched, I decided to
+look for ways to profile the slowness away!</p>
+<p>It’s really easy, just pop your vim open and type this in normal mode:</p>
+<pre class="astro-code roast" style="background-color:#2A1A12;color:#F2E5CF; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># save to ~/record.log</span></span>
+<span class="line"><span>:profile start ~/record.log </span></span>
+<span class="line"><span></span></span>
+<span class="line"><span># the profile for every function and file</span></span>
+<span class="line"><span>:profile func *</span></span>
+<span class="line"><span>:profile file *</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span># do whatever's slow action that you want to record, for example:</span></span>
+<span class="line"><span>:open sample_ruby_file.rb</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>:profile pause</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span># required to quit to create ~/record.log</span></span>
+<span class="line"><span>:qall</span></span></code></pre>
+<p>Next you can now check the bottom of <code>~/record.log</code>,
+under “FUNCTIONS SORTED ON SELF TIME”:</p>
+<pre class="astro-code roast" style="background-color:#2A1A12;color:#F2E5CF; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>...</span></span>
+<span class="line"><span>FUNCTIONS SORTED ON SELF TIME</span></span>
+<span class="line"><span>count  total (s)   self (s)  function</span></span>
+<span class="line"><span>    3   0.042048   0.015790  &lt;SNR&gt;4_SynSet()</span></span>
+<span class="line"><span>    1   2.495415   0.014309  &lt;SNR&gt;31_LoadFTPlugin()</span></span>
+<span class="line"><span>    6   0.009933   0.004577  &lt;SNR&gt;227_line()</span></span>
+<span class="line"><span>    1   0.006000   0.003480  &lt;SNR&gt;32_LoadIndent()</span></span>
+<span class="line"><span>   12   0.003720   0.002310  &lt;SNR&gt;227_expand()</span></span>
+<span class="line"><span>... and more</span></span></code></pre>
+<p>In my case, since <code>31_LoadFTPlugin</code> took 2 seconds, I went down the rabbit hole
+of why this is slow and ended up in <a href="https://github.com/vim-ruby/vim-ruby/search?q=ftplugin+slow&amp;type=Issues&amp;utf8=%E2%9C%93">vim-ruby/ftplugin issues</a>.</p>
+<p>Luckily, it’s fixed in the latest vim-ruby. So I just had to update mine via <code>:PluginUpdate vim-ruby</code> (for Vundler users).</p>
+<p>So next time you see a large spike in your vim setup, profile the slowness away!</p>
+<p>BONUS: Also, if your vim’s startup time is slow, you can still profile that with:</p>
+<pre class="astro-code roast" style="background-color:#2A1A12;color:#F2E5CF; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>$ vim --startuptime time_cost.txt</span></span></code></pre>
+<p>There you have it! Happy fiddling around with vim!</p>
+</div></div></article><section class="wrap seealso" aria-labelledby="more-title"><h2 class="display d3" id="more-title">More on Vim</h2><ul class="notes" data-note-list><li><a class="row" href="/tech-notes/notes/use-html-css-js-vim-plugins-for-vue/"><span class="shape s-vim" aria-hidden="true"></span><span class="row-title">Use HTML/CSS/JS plugins for VueJS files</span><span class="row-meta">2017</span></a></li></ul></section></main><footer class="foot"><div class="wrap"><div class="foot-grid"><div class="foot-main"><p class="display d3 foot-pitch">I&#39;m open for Ruby, Rails and Shopify projects.</p><p class="foot-talk"><a href="/tech-notes/about/#talk">Let's talk</a></p></div><nav aria-label="Footer pages"><p class="foot-head">Pages</p><ul class="foot-list"><li><a href="/tech-notes/notes/">Notes</a></li><li><a href="/tech-notes/work/">Work</a></li><li><a href="/tech-notes/about/">About</a></li><li><a href="/tech-notes/now/">Now</a></li><li><a href="/tech-notes/elsewhere/">Elsewhere</a></li></ul></nav><nav aria-label="Profiles and feed"><p class="foot-head">Find me</p><ul class="foot-list"><li><a href="https://github.com/padi">GitHub</a></li><li><a href="https://x.com/marcrendl">X</a></li><li><a href="https://cssbattle.dev/player/mri">CSSBattle</a></li><li><a href="https://monkeytype.com/profile/m14o">Monkeytype</a></li><li><a href="/tech-notes/feed.xml">RSS feed</a></li></ul></nav></div><p class="foot-sign">Marc Rendl, 2026</p></div></footer></body></html>
